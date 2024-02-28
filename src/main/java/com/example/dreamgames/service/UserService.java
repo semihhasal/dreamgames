@@ -13,8 +13,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserEntity createUser() {
+    public UserEntity createUser(String username) {
         UserEntity newUser = new UserEntity();
+        newUser.setUsername(username);
         newUser.setCoins(5000); // Başlangıç para miktarı
         newUser.setLevel(1); // Başlangıç seviyesi
         newUser.setCountry(assignRandomCountry()); // Rastgele ülke ataması

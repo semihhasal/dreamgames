@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
@@ -28,11 +29,14 @@ public class UserController {
 
 
 
+
     @PostMapping("/create")
-    public ResponseEntity<UserEntity> createUser() {
-        UserEntity newUser = userService.createUser();
-        return ResponseEntity.ok(newUser); // HTTP 200 OK yanıtı ile yeni kullanıcıyı döndürür.
+    public ResponseEntity<UserEntity> createUser(@RequestBody Map<String, String> request) {
+        String username = request.get("username"); // İstek gövdesinden kullanıcı adını al
+        UserEntity newUser = userService.createUser(username);
+        return ResponseEntity.ok(newUser); // HTTP 200 OK yanıtı ile yeni kullanıcıyı döndür
     }
+
 
     @PutMapping("/{userId}/level-up")
     public ResponseEntity<?> updateUserLevel(@PathVariable Long userId) {
