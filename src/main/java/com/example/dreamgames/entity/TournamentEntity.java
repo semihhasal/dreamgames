@@ -17,11 +17,14 @@ public class TournamentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Turnuva başlangıç ve bitiş saatlerini UTC olarak saklayabilirsiniz.
-    @Column(name = "StartTime")
+    // Kullanıcı ID'si
+    @Column(name = "user_id")
+    private Long userId;
+
+    // Turnuva başlangıç ve bitiş saatleri UTC olarak saklanabilir
+    @Column(name = "start_time")
     private String startTime;
+
+    @Column(name = "end_time")
     private String endTime;
-
-
-
 }

@@ -1,8 +1,12 @@
-package com.example.dreamgames;
+package com.example.dreamgames.dto;
 
 public class CountryScoreDTO {
     private String country;
     private int totalScore;
+
+    public CountryScoreDTO(String usa, int i) {
+    }
+
     public String getCountry() {
         return country;
     }

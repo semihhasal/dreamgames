@@ -1,6 +1,6 @@
 package com.example.dreamgames.service;
 
-import com.example.dreamgames.CountryScoreDTO;
+import com.example.dreamgames.dto.CountryScoreDTO;
 import com.example.dreamgames.entity.TournamentEntity;
 import com.example.dreamgames.entity.UserEntity;
 import com.example.dreamgames.entity.UserTournamentEntity;
@@ -10,6 +10,8 @@ import com.example.dreamgames.repository.UserTournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +38,11 @@ public class TournamentService {
         user.setCoins(user.getCoins() - 1000);
         userRepository.save(user);
 
-        // Turnuvaya katılım işlemleri...
-        // Bu kısımda, turnuva oluşturma veya mevcut bir turnuvaya kullanıcıyı ekleme işlemleri gerçekleştirilir
-        // Grup lider tablosunu hesapla veya getir
+        // Kullanıcıyı turnuvaya ekleyin veya kayıt işlemlerini gerçekleştirin
 
         // Örnek bir TournamentEntity nesnesi döndürülüyor
         // Gerçek uygulamada bu, turnuva ve grup lider tablosu verileriyle dolu olmalıdır
-        return new TournamentEntity();
+        return createTournament(user); // Örnek bir createTournament metodu çağrıldı
     }
 
 
@@ -93,12 +93,37 @@ public class TournamentService {
     public List<UserTournamentEntity> getGroupLeaderboard(Long tournamentId) {
         return userTournamentRepository.findByTournamentIdOrderByScoreDesc(tournamentId);
     }
+    public TournamentEntity createTournament(UserEntity user) {
+        // Yeni bir turnuva oluştur
+        TournamentEntity tournament = new TournamentEntity();
+
+        // Turnuva ID'sini user ID'ye eşitle
+        tournament.setUserId(user.getId());
+
+        // Başlangıç zamanını ayarla (dakikadan sonrasını almaz)
+        LocalDateTime startTime = LocalDateTime.now().withSecond(0).withNano(0); // Şu anki zamanı ve saniye/saliseyi sıfırla
+        tournament.setStartTime(startTime.toString());
+
+        // Bitiş zamanını ayarla (her zaman 20:00 UTC)
+        LocalTime endTime = LocalTime.of(20, 0); // Her zaman 20:00 UTC
+        LocalDateTime endDate = LocalDateTime.of(startTime.toLocalDate(), endTime).plusDays(1); // Başlangıç tarihine 20:00'ı ekleyip 1 gün ileri al
+        tournament.setEndTime(endDate.toString());
+
+        // Turnuva veritabanına kaydedilir
+        tournament = tournamentRepository.save(tournament);
+
+        // Oluşturulan turnuvayı döndür
+        return tournament;
+    }
 
     public List<CountryScoreDTO> getCountryLeaderboard() {
         // Bu metod, UserTournamentEntity üzerinden her ülkenin toplam skorunu hesaplar.
         // Sonuçları CountryScoreDTO listesi olarak döndürür.
         // CountryScoreDTO, ülke ismi ve toplam skoru içeren bir DTO olmalıdır.
         List<CountryScoreDTO> leaderboard = new ArrayList<>();
+        leaderboard.add(new CountryScoreDTO("USA", 1000));
+        leaderboard.add(new CountryScoreDTO("Germany", 900));
+        leaderboard.add(new CountryScoreDTO("France", 800));
         // Veritabanı sorgusu ile her ülkenin toplam skorunu hesapla ve leaderboard listesine ekle.
         return leaderboard;
     }

@@ -1,6 +1,6 @@
 package com.example.dreamgames.api;
 
-import com.example.dreamgames.CountryScoreDTO;
+import com.example.dreamgames.dto.CountryScoreDTO;
 import com.example.dreamgames.entity.TournamentEntity;
 import com.example.dreamgames.entity.UserEntity;
 import com.example.dreamgames.entity.UserTournamentEntity;
