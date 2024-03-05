@@ -57,7 +57,10 @@ public class UserController {
 
             // Grup lider tablosunu al (bu örnek için basit bir placeholder kullanılmıştır)
             // Gerçek uygulamada bu veri TournamentService tarafından sağlanacak
-            List<UserEntity> groupLeaderboard = new ArrayList<>(); // Bu liste gerçek veri ile doldurulmalı
+            List<CountryScoreDTO> groupLeaderboard = new ArrayList<>();// Bu liste gerçek veri ile doldurulmalı
+            groupLeaderboard.add(new CountryScoreDTO("USA", 1000));
+            groupLeaderboard.add(new CountryScoreDTO("Germany", 900));
+            groupLeaderboard.add(new CountryScoreDTO("France", 800));
 
             // Grup lider tablosu verilerini döndür
             return ResponseEntity.ok(groupLeaderboard);

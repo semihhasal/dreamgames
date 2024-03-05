@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TournamentService {
@@ -25,26 +25,68 @@ public class TournamentService {
     @Autowired
     private UserTournamentRepository userTournamentRepository;
 
+    private final String[] countries = {"Turkey", "United States", "United Kingdom", "France", "Germany"};
+
     public TournamentEntity enterTournament(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
 
-        // Kullanıcı seviye ve altın şartlarını kontrol et
         if (user.getLevel() < 20 || user.getCoins() < 1000) {
             throw new RuntimeException("User does not meet the requirements to enter the tournament.");
         }
 
-        // Kullanıcıdan katılım ücreti al
         user.setCoins(user.getCoins() - 1000);
         userRepository.save(user);
 
-        // Kullanıcıyı turnuvaya ekleyin veya kayıt işlemlerini gerçekleştirin
+        UserTournamentEntity existingRegistration = userTournamentRepository.findByUserId(userId).orElse(null);
+        if (existingRegistration != null) {
+            return tournamentRepository.findById(existingRegistration.getTournament().getId()).orElse(null);
+        }
 
-        // Örnek bir TournamentEntity nesnesi döndürülüyor
-        // Gerçek uygulamada bu, turnuva ve grup lider tablosu verileriyle dolu olmalıdır
-        return createTournament(user); // Örnek bir createTournament metodu çağrıldı
+        TournamentEntity tournament = findOrCreateTournament();
+        UserTournamentEntity newUserTournament = new UserTournamentEntity();
+        newUserTournament.setUser(user);
+        newUserTournament.setTournament(tournament);
+        userTournamentRepository.save(newUserTournament);
+
+        return tournament;
     }
 
+    private TournamentEntity findOrCreateTournament() {
+        List<TournamentEntity> allTournaments = tournamentRepository.findAll();
+
+        TournamentSearch:
+        for (TournamentEntity tournament : allTournaments) {
+            List<UserTournamentEntity> participants = userTournamentRepository.findByTournamentId(tournament.getId());
+            if (participants.size() < 5) {
+                Set<String> participantCountries = new HashSet<>();
+                for (UserTournamentEntity participant : participants) {
+                    participantCountries.add(participant.getUser().getCountry());
+                }
+
+                for (String country : countries) {
+                    if (participantCountries.contains(country) && participantCountries.size() == participants.size()) {
+                        continue TournamentSearch;
+                    }
+                }
+
+                return tournament;
+            }
+        }
+
+        return createNewTournament();
+    }
+
+    private TournamentEntity createNewTournament() {
+        TournamentEntity tournament = new TournamentEntity();
+        LocalDateTime startTime = LocalDateTime.now().withSecond(0).withNano(0);
+        LocalTime endTime = LocalTime.of(20, 0);
+        LocalDateTime endDate = LocalDateTime.of(startTime.toLocalDate(), endTime).plusDays(1);
+
+        tournament.setStartTime(startTime.toString());
+        tournament.setEndTime(endDate.toString());
+        return tournamentRepository.save(tournament);
+    }
 
     public UserEntity claimReward(Long userId) {
         // Kullanıcıyı bul
@@ -92,28 +134,6 @@ public class TournamentService {
 
     public List<UserTournamentEntity> getGroupLeaderboard(Long tournamentId) {
         return userTournamentRepository.findByTournamentIdOrderByScoreDesc(tournamentId);
-    }
-    public TournamentEntity createTournament(UserEntity user) {
-        // Yeni bir turnuva oluştur
-        TournamentEntity tournament = new TournamentEntity();
-
-        // Turnuva ID'sini user ID'ye eşitle
-        tournament.setUserId(user.getId());
-
-        // Başlangıç zamanını ayarla (dakikadan sonrasını almaz)
-        LocalDateTime startTime = LocalDateTime.now().withSecond(0).withNano(0); // Şu anki zamanı ve saniye/saliseyi sıfırla
-        tournament.setStartTime(startTime.toString());
-
-        // Bitiş zamanını ayarla (her zaman 20:00 UTC)
-        LocalTime endTime = LocalTime.of(20, 0); // Her zaman 20:00 UTC
-        LocalDateTime endDate = LocalDateTime.of(startTime.toLocalDate(), endTime).plusDays(1); // Başlangıç tarihine 20:00'ı ekleyip 1 gün ileri al
-        tournament.setEndTime(endDate.toString());
-
-        // Turnuva veritabanına kaydedilir
-        tournament = tournamentRepository.save(tournament);
-
-        // Oluşturulan turnuvayı döndür
-        return tournament;
     }
 
     public List<CountryScoreDTO> getCountryLeaderboard() {

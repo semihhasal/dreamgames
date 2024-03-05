@@ -1,9 +1,10 @@
 package com.example.dreamgames.entity;
 
+import com.example.dreamgames.dto.CountryScoreDTO;
 import jakarta.persistence.*;
 
 @Entity
-@Table
+@Table(name = "user_tournament") // Tablo ismi eksikti, eklendi.
 public class UserTournamentEntity {
 
     @Id
@@ -55,6 +56,7 @@ public class UserTournamentEntity {
     public void setScore(int score) {
         this.score = score;
     }
+
+
+// Existing getters and setters are correct, no change needed here.
 }
-
-

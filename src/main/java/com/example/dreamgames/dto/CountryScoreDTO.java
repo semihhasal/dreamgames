@@ -4,7 +4,9 @@ public class CountryScoreDTO {
     private String country;
     private int totalScore;
 
-    public CountryScoreDTO(String usa, int i) {
+    public CountryScoreDTO(String country, int totalScore) {
+        this.country = country;
+        this.totalScore = totalScore;
     }
 
     public String getCountry() {

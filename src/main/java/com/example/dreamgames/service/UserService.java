@@ -16,7 +16,7 @@ public class UserService {
     public UserEntity createUser(String username) {
         UserEntity newUser = new UserEntity();
         newUser.setUsername(username);
-        newUser.setCoins(5000); // Başlangıç para miktarı
+        newUser.setCoins(50000); // Başlangıç para miktarı
         newUser.setLevel(1); // Başlangıç seviyesi
         newUser.setCountry(assignRandomCountry()); // Rastgele ülke ataması
         userRepository.save(newUser); // Kullanıcıyı veritabanına kaydet

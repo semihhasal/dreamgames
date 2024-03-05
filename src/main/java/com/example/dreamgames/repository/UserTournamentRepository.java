@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserTournamentRepository extends JpaRepository<UserTournamentEntity, Long> {
@@ -14,6 +15,11 @@ public interface UserTournamentRepository extends JpaRepository<UserTournamentEn
     List<UserTournamentEntity> findUserRankingsInTournaments(@Param("userId") Long userId);
 
     List<UserTournamentEntity> findByTournamentIdOrderByScoreDesc(Long tournamentId);
+
+    Optional<UserTournamentEntity> findByUserId(Long userId);
+
+
+    List<UserTournamentEntity> findByTournamentId(Long id);
 }
 
 
