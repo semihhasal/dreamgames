@@ -71,18 +71,16 @@ public class UserController {
     }
 
 
+    // UserController içindeki endpoint
     @PostMapping("/{userId}/claim-reward")
     public ResponseEntity<?> claimReward(@PathVariable Long userId) {
         try {
-            // Ödül talebi işlemi burada gerçekleştirilecek
-            UserEntity user = userService.claimReward(userId);
+            UserEntity user = tournamentService.claimReward(userId);
             return ResponseEntity.ok(user);
         } catch (Exception e) {
-            // Hata durumunda uygun hata mesajı ile cevap döndürülecek
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
-
 
 
 

@@ -89,18 +89,16 @@ public class TournamentService {
     }
 
     public UserEntity claimReward(Long userId) {
-        // Kullanıcıyı bul
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found!"));
 
-        // Kullanıcı sıralamasını hesapla ve ödülü atama
-        // Bu örnek bir iş mantığıdır, gerçek uygulamada turnuva detaylarına bağlı olarak değişiklik gösterebilir
-        int rank = calculateUserRankInTournament(userId);
-        int reward = getRewardBasedOnRank(rank);
-        user.setCoins(user.getCoins() + reward);
+        // Kullanıcının mevcut coin miktarına 5000 ekleyin
+        user.setCoins(user.getCoins() + 5000);
 
         // Kullanıcıyı güncelle
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        return user;
     }
 
     private int calculateUserRankInTournament(Long userId) {
