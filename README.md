@@ -1,3 +1,4 @@
+Intelij Idea üzerinden yaptım Java 17 kullanarak.
 Mysql databasesi kullandım.
 İşlemleri postman üzerinden uyguladım.
 Öncelikle edit configurations kısmından database kullanıcı adı ve şifreyi tanımlanaız lazım
