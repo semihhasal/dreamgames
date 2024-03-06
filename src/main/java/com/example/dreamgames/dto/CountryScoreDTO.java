@@ -2,9 +2,9 @@ package com.example.dreamgames.dto;
 
 public class CountryScoreDTO {
     private String country;
-    private int totalScore;
+    private long totalScore;
 
-    public CountryScoreDTO(String country, int totalScore) {
+    public CountryScoreDTO(String country, long totalScore) {
         this.country = country;
         this.totalScore = totalScore;
     }
@@ -17,11 +17,11 @@ public class CountryScoreDTO {
         this.country = country;
     }
 
-    public int getTotalScore() {
+    public long getTotalScore() {
         return totalScore;
     }
 
-    public void setTotalScore(int totalScore) {
+    public void setTotalScore(long totalScore) {
         this.totalScore = totalScore;
     }
 

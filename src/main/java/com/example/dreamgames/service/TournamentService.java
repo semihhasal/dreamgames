@@ -119,9 +119,17 @@ public class TournamentService {
     }
 
     public int getUserRankInTournament(Long userId, Long tournamentId) {
-        // Kullanıcının turnuvadaki skorlarına göre sıralamasını hesaplayan sorgu
-        // Bu sorgu UserTournamentEntity üzerinden yapılmalıdır
-        return calculateRank(userId, tournamentId);
+        List<UserTournamentEntity> rankings = userTournamentRepository.findByTournamentIdOrderByScoreDesc(tournamentId);
+
+        int rank = 1; // Sıralama 1'den başlar
+        for (UserTournamentEntity ranking : rankings) {
+            if (ranking.getUser().getId().equals(userId)) {
+                return rank; // Kullanıcının sırasını döndür
+            }
+            rank++; // Bir sonraki sıraya geç
+        }
+
+        return 0; // Kullanıcı bu turnuvada bulunmuyorsa 0 döndür
     }
 
     private int calculateRank(Long userId, Long tournamentId) {
@@ -135,17 +143,9 @@ public class TournamentService {
     }
 
     public List<CountryScoreDTO> getCountryLeaderboard() {
-        // Bu metod, UserTournamentEntity üzerinden her ülkenin toplam skorunu hesaplar.
-        // Sonuçları CountryScoreDTO listesi olarak döndürür.
-        // CountryScoreDTO, ülke ismi ve toplam skoru içeren bir DTO olmalıdır.
-        List<CountryScoreDTO> leaderboard = new ArrayList<>();
-        leaderboard.add(new CountryScoreDTO("USA", 1000));
-        leaderboard.add(new CountryScoreDTO("Germany", 900));
-        leaderboard.add(new CountryScoreDTO("France", 800));
-        // Veritabanı sorgusu ile her ülkenin toplam skorunu hesapla ve leaderboard listesine ekle.
-        return leaderboard;
+        // userRepository ya da userTournamentRepository'de tanımlı bir sorgu ile ülkelerin toplam skorlarını getir
+        return userTournamentRepository.calculateScoresByCountry();
     }
-
 
 
 
