@@ -13,7 +13,7 @@ http://localhost:8080/users/9/group-rank?tournamentId=4(![image](https://github.
 http://localhost:8080/users/group-leaderboard?tournamentId=4(yine aynı tablo üzerinden işlemleri yaptım.)
 http://localhost:8080/country-leaderboard(tüm katılımcaların ülkelerininin puanlarını toplayarak yaptım ekstradan bir tablo oluşturmadım.)
 
-
+Dockerize işlemini yapıp image oluşrudum fakat sql bağlantı işlemleri her bilgisayarda farklı sanırım daha önce hiç docker kullanmadığım için bilmiyorum.
 
 
 Projeyi GitFront Üzerinden paylaştım.
